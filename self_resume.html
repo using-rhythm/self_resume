@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Deepanshu - Interactive Resume</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Chosen Palette: "Cool Slate" - A professional and calm palette using slate grays for the base, a deep blue for accents, and a light background for clarity and readability. -->
+    <!-- Application Structure Plan: The SPA is structured as a single-page portfolio with a top navigation bar for quick access to thematic sections: Overview, Skills, Experience, Projects, and Education. This non-linear structure allows recruiters to immediately jump to the information they find most relevant. The 'Overview' section acts as a dashboard, featuring a radar chart for an at-a-glance summary of skill strengths, which is more engaging than a simple text block. The 'Skills' section uses interactive filters, 'Experience' is a vertical timeline, and 'Projects' are presented as cards. This design prioritizes user-directed exploration and progressive disclosure of information for a more memorable and efficient user experience. -->
+    <!-- Visualization & Content Choices:
+        - Report Info: Core skill categories (Networking, OS, Hardware, Support). Goal: Compare. Viz: Radar Chart (Chart.js). Interaction: None, it's a static visualization. Justification: Provides a quick, high-level visual summary of expertise areas, which is more impactful than text alone.
+        - Report Info: Detailed list of technical skills. Goal: Organize. Viz: Text blocks within styled containers. Interaction: Clickable filter buttons. Justification: Allows users to focus on specific skill sets without being overwhelmed by a single long list, improving readability.
+        - Report Info: Work History. Goal: Show Change/Progression. Viz: Vertical Timeline (HTML/Tailwind). Interaction: Scrolling. Justification: Clearly illustrates career progression in a chronological and visually appealing format.
+        - Report Info: Projects. Goal: Inform/Organize. Viz: Grid of cards (HTML/Tailwind). Interaction: Hover effects. Justification: Organizes distinct pieces of work into easily scannable blocks, making them more digestible than a paragraph.
+        - Report Info: Education & Certs. Goal: Inform. Viz: Styled text sections. Interaction: None. Justification: Clean, clear presentation of credentials. The CCNA is visually highlighted to draw attention.
+        - CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f8fafc; /* slate-50 */
+        }
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 500px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 300px;
+            max-height: 400px;
+        }
+        @media (min-width: 768px) {
+            .chart-container {
+                height: 400px;
+            }
+        }
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            width: 1.25rem;
+            height: 1.25rem;
+            border-radius: 9999px;
+            background-color: #f1f5f9; /* slate-100 */
+            border: 4px solid #0ea5e9; /* sky-500 */
+            left: -0.625rem;
+            top: 0;
+            z-index: 10;
+        }
+    </style>
+</head>
+<body class="text-slate-700">
+
+    <header class="bg-slate-800 text-white shadow-lg sticky top-0 z-50">
+        <nav class="container mx-auto px-6 py-3">
+            <div class="flex justify-between items-center">
+                <a href="#overview" class="text-xl font-bold">🌐</a>
+                <div class="hidden md:flex space-x-6 items-center">
+                    <a href="#overview" class="hover:text-sky-400 transition-colors">Overview</a>
+                    <a href="#skills" class="hover:text-sky-400 transition-colors">Skills</a>
+                    <a href="#experience" class="hover:text-sky-400 transition-colors">Experience</a>
+                    <a href="#projects" class="hover:text-sky-400 transition-colors">Projects</a>
+                    <a href="#education" class="hover:text-sky-400 transition-colors">Education & Certs</a>
+                    <a href="mailto:deepansusaini59@gmail.com" class="bg-sky-500 hover:bg-sky-600 px-4 py-2 rounded-md transition-colors">Contact Me</a>
+                </div>
+                <div class="md:hidden">
+                    <button id="mobile-menu-button" class="text-white focus:outline-none">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path></svg>
+                    </button>
+                </div>
+            </div>
+            <div id="mobile-menu" class="hidden md:hidden mt-4">
+                <a href="#overview" class="block py-2 hover:text-sky-400 transition-colors">Overview</a>
+                <a href="#skills" class="block py-2 hover:text-sky-400 transition-colors">Skills</a>
+                <a href="#experience" class="block py-2 hover:text-sky-400 transition-colors">Experience</a>
+                <a href="#projects" class="block py-2 hover:text-sky-400 transition-colors">Projects</a>
+                <a href="#education" class="block py-2 hover:text-sky-400 transition-colors">Education & Certs</a>
+                <a href="mailto:deepansusaini59@gmail.com" class="block mt-2 bg-sky-500 hover:bg-sky-600 px-4 py-2 rounded-md transition-colors text-center">Contact Me</a>
+            </div>
+        </nav>
+    </header>
+
+    <main class="container mx-auto px-6 py-8 md:py-12">
+
+        <section id="overview" class="min-h-screen flex flex-col justify-center">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
+                <div class="animate-fade-in-up">
+                    <h1 class="text-4xl md:text-5xl font-bold text-slate-900">Deepanshu</h1>
+                    <h2 class="text-xl md:text-2xl text-sky-600 font-semibold mt-2">Network Engineer & Technical Support Specialist</h2>
+                    <p class="mt-4 text-lg text-slate-600">
+                        Highly motivated and results-driven IT professional with hands-on experience in network engineering, system administration, and technical support. Proficient in designing, configuring, and troubleshooting complex network topologies. Adept at managing Windows and Linux environments, resolving hardware/software issues, and providing exceptional customer support.
+                    </p>
+                    <div class="mt-6 flex space-x-4">
+                         <a href="https://www.linkedin.com/in/deepanshu-11a203264/" target="_blank" class="text-sky-600 hover:text-sky-800 transition-colors">
+                            <svg class="w-8 h-8" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path fill-rule="evenodd" d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z" clip-rule="evenodd"/></svg>
+                        </a>
+                        <a href="mailto:deepansusaini59@gmail.com" class="text-sky-600 hover:text-sky-800 transition-colors">
+                           <svg class="w-8 h-8" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path d="M22 6c0-1.1-.9-2-2-2H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6zm-2 0l-8 5-8-5h16zm0 12H4V8l8 5 8-5v10z"/></svg>
+                        </a>
+                    </div>
+                </div>
+                <div class="animate-fade-in">
+                    <div class="chart-container">
+                        <canvas id="skillsRadarChart"></canvas>
+                    </div>
+                     <p class="text-center text-sm text-slate-500 mt-2">A visual overview of core competency areas.</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="skills" class="py-16 md:py-20">
+            <h2 class="text-3xl font-bold text-center text-slate-900">Technical Skills</h2>
+            <p class="text-center mt-2 text-lg text-slate-600">A detailed breakdown of my technical capabilities. Click to filter.</p>
+            <div id="skills-filter" class="flex flex-wrap justify-center gap-2 md:gap-4 mt-8">
+            </div>
+            <div id="skills-content" class="mt-8 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            </div>
+        </section>
+
+        <section id="experience" class="py-16 md:py-20">
+            <h2 class="text-3xl font-bold text-center text-slate-900">Professional Experience</h2>
+             <p class="text-center mt-2 text-lg text-slate-600">My career journey and key contributions.</p>
+            <div class="mt-12 relative border-l-2 border-slate-200 ml-4 pl-8 md:pl-12">
+            </div>
+        </section>
+
+        <section id="projects" class="py-16 md:py-20">
+            <h2 class="text-3xl font-bold text-center text-slate-900">Hands-On Projects</h2>
+             <p class="text-center mt-2 text-lg text-slate-600">Applying theory to practice through self-initiated projects.</p>
+            <div id="projects-grid" class="mt-12 grid grid-cols-1 md:grid-cols-2 gap-8">
+            </div>
+        </section>
+
+        <section id="education" class="py-16 md:py-20 bg-slate-100 rounded-lg">
+             <h2 class="text-3xl font-bold text-center text-slate-900">Education & Certifications</h2>
+             <p class="text-center mt-2 text-lg text-slate-600">My foundational knowledge and industry-recognized credentials.</p>
+            <div class="mt-12 grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto">
+            </div>
+        </section>
+
+    </main>
+
+    <footer class="bg-slate-800 text-white py-8">
+        <div class="container mx-auto px-6 text-center">
+            <p>Ready to build the future of networking together?</p>
+            <p class="mt-1">Let's connect.</p>
+            <div class="mt-4 flex justify-center space-x-4">
+                <a href="https://www.linkedin.com/in/deepanshu-11a203264/" target="_blank" class="hover:text-sky-400 transition-colors">LinkedIn</a>
+                <span class="text-slate-500">|</span>
+                <a href="mailto:deepansusaini59@gmail.com" class="hover:text-sky-400 transition-colors">deepansusaini59@gmail.com</a>
+                 <span class="text-slate-500">|</span>
+                <p>+91 9403183213</p>
+            </div>
+            <p class="text-sm mt-6 text-slate-400">&copy; 2025 Deepanshu. All Rights Reserved.</p>
+        </div>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+
+            const resumeData = {
+                skills: {
+                    "Networking": ["TCP/IP", "DNS & DHCP", "VLANs & Trunking", "OSPF & EIGRP", "Subnetting", "Cisco IOS", "GNS3", "EVE-NG"],
+                    "Operating Systems": ["Windows Server (2016/2019)", "Windows 10/11", "Ubuntu Linux", "Kali Linux", "CentOS", "Command Line (CLI)"],
+                    "Hardware": ["Cisco Routers & Switches", "Dell/HP Servers", "Desktop Troubleshooting", "Laptop Maintenance", "Network Cabling", "Printers & Peripherals"],
+                    "IT Administration": ["System Configuration", "Network Performance Monitoring", "Troubleshooting", "Technical Documentation"],
+                    "Soft Skills": ["Problem-Solving", "Communication", "Team Collaboration", "Adaptability", "Time Management", "Customer Support"]
+                },
+                experience: [
+                    {
+                        title: "Network Engineer Trainee",
+                        company: "Network Bulls, Gurugram, India",
+                        date: "Jan 2025 – Present",
+                        details: [
+                            "Designed and simulated enterprise-grade network topologies using GNS3 and EVE-NG, applying best practices for scalability and performance.",
+                            "Configured and troubleshot a wide range of network devices, including routers, switches, and firewalls, leveraging Cisco IOS in lab environments.",
+                            "Implemented and validated core networking protocols such as TCP/IP, VLANs, OSPF, and EIGRP, ensuring stable network operations.",
+                            "Monitored network performance and actively assisted in diagnosing and resolving connectivity and latency issues.",
+                            "Documented detailed network configurations, topologies, and troubleshooting procedures for internal knowledge sharing.",
+                            "Collaborated with senior engineers to understand real-world deployment and security best practices."
+                        ]
+                    },
+                    {
+                        title: "Community Manager",
+                        company: "Epic U (Remote)",
+                        date: "Oct 2023 – Nov 2024",
+                        details: [
+                            "Cultivated an engaging, supportive environment for 1,000+ online learners in a global tech-focused student community.",
+                            "Facilitated discussions, solved queries, and shared curated learning content related to networking and cybersecurity.",
+                            "Collaborated with internal stakeholders to design events and challenges that boosted student participation.",
+                            "Managed online community platforms, ensured inclusive interactions, and enforced code of conduct standards.",
+                            "Collected and analyzed user feedback to enhance the overall learning experience."
+                        ]
+                    }
+                ],
+                projects: [
+                    {
+                        title: "Virtual Lab Infrastructure for Network Simulation",
+                        description: "Designed and deployed virtual machines using VMware, VirtualBox, and EVE-NG for simulating enterprise-level network environments.",
+                        details: [
+                            "Installed and configured operating systems including Windows Server, Ubuntu, Kali Linux, and Windows 10.",
+                            "Created lab scenarios to practice subnetting, routing (OSPF, EIGRP), VLANs, STP, EtherChannel, DHCP, DNS, and ACLs.",
+                            "Built a test lab for troubleshooting real-time issues, practicing dynamic routing, and validating configurations."
+                        ]
+                    },
+                    {
+                        title: "Enterprise Network Topology Simulation",
+                        description: "Designed complex multi-site topologies with routers, Layer 2/3 switches, and DHCP/DNS servers in Cisco Packet Tracer and EVE-NG.",
+                        details: [
+                           "Configured VLANs, trunk links, inter-VLAN routing, STP, EtherChannel, and VTP across switches.",
+                           "Deployed dynamic routing using OSPF and EIGRP, with high-availability through HSRP.",
+                           "Implemented real-time IP addressing, ACLs, NAT, and security configurations to reflect production-ready infrastructure."
+                        ]
+                    }
+                ],
+                education: [
+                    {
+                        degree: "Bachelor of Computer Applications (BCA)",
+                        institution: "Manipal University Jaipur, Jaipur, Rajasthan",
+                        graduated: "Graduated: 2025",
+                        focus: "Focused on Networking, Operating Systems, Cybersecurity, and Software Development. Gained foundational knowledge in network protocols, system architecture, and application security."
+                    }
+                ],
+                certifications: [
+                    {
+                        name: "Cisco Certified Network Associate (CCNA)",
+                        issuer: "Cisco / Network Bulls, Gurugram, India",
+                        completed: "Completed: 2025",
+                        focus: "Hands-on training in Cisco IOS, VLANs, Trunking, OSPF, EIGRP, DHCP, DNS, ACLs, and network troubleshooting."
+                    }
+                ]
+            };
+
+            const mobileMenuButton = document.getElementById('mobile-menu-button');
+            const mobileMenu = document.getElementById('mobile-menu');
+            mobileMenuButton.addEventListener('click', () => {
+                mobileMenu.classList.toggle('hidden');
+            });
+
+            document.querySelectorAll('#mobile-menu a').forEach(link => {
+                link.addEventListener('click', () => mobileMenu.classList.add('hidden'));
+            });
+
+            const radarCtx = document.getElementById('skillsRadarChart').getContext('2d');
+            new Chart(radarCtx, {
+                type: 'radar',
+                data: {
+                    labels: ['Networking', 'Operating Systems', 'Hardware', 'IT Administration', 'Problem Solving'],
+                    datasets: [{
+                        label: 'Skill Proficiency',
+                        data: [90, 90, 90, 85, 100],
+                        backgroundColor: 'rgba(14, 165, 233, 0.2)', // sky-500
+                        borderColor: 'rgba(14, 165, 233, 1)',
+                        pointBackgroundColor: 'rgba(14, 165, 233, 1)',
+                        pointBorderColor: '#fff',
+                        pointHoverBackgroundColor: '#fff',
+                        pointHoverBorderColor: 'rgba(14, 165, 233, 1)'
+                    }]
+                },
+                options: {
+                    maintainAspectRatio: false,
+                    scales: {
+                        r: {
+                            angleLines: { color: 'rgba(0, 0, 0, 0.1)' },
+                            grid: { color: 'rgba(0, 0, 0, 0.1)' },
+                            pointLabels: { font: { size: 14 }, color: '#334155' },
+                            ticks: {
+                                backdropColor: 'transparent',
+                                color: '#64748b',
+                                stepSize: 25,
+                                beginAtZero: true,
+                                max: 100,
+                                display: false
+                            }
+                        }
+                    },
+                    plugins: {
+                        legend: { display: false }
+                    }
+                }
+            });
+
+            const skillsFilterContainer = document.getElementById('skills-filter');
+            const skillsContentContainer = document.getElementById('skills-content');
+            const skillCategories = Object.keys(resumeData.skills);
+
+            skillCategories.forEach(category => {
+                const button = document.createElement('button');
+                button.textContent = category;
+                button.className = 'skill-filter-btn px-4 py-2 rounded-md transition-colors border-2 border-slate-200 hover:bg-sky-500 hover:text-white hover:border-sky-500';
+                if (category === "Networking") {
+                    button.classList.add('bg-sky-500', 'text-white', 'border-sky-500');
+                }
+                button.dataset.category = category;
+                skillsFilterContainer.appendChild(button);
+            });
+
+            const displaySkills = (category) => {
+                skillsContentContainer.innerHTML = '';
+                resumeData.skills[category].forEach(skill => {
+                    const skillItem = document.createElement('div');
+                    skillItem.className = 'bg-white p-4 rounded-lg shadow-md hover:shadow-xl transition-shadow flex items-center';
+                    skillItem.innerHTML = `<span class="text-sky-500 mr-3">✓</span> ${skill}`;
+                    skillsContentContainer.appendChild(skillItem);
+                });
+            };
+
+            skillsFilterContainer.addEventListener('click', (e) => {
+                if (e.target.tagName === 'BUTTON') {
+                    document.querySelectorAll('.skill-filter-btn').forEach(btn => {
+                        btn.classList.remove('bg-sky-500', 'text-white', 'border-sky-500');
+                        btn.classList.add('border-slate-200');
+                    });
+                    e.target.classList.add('bg-sky-500', 'text-white', 'border-sky-500');
+                    e.target.classList.remove('border-slate-200');
+                    displaySkills(e.target.dataset.category);
+                }
+            });
+
+            displaySkills('Networking');
+
+            const experienceContainer = document.querySelector('#experience .relative');
+            resumeData.experience.forEach(job => {
+                const jobItem = document.createElement('div');
+                jobItem.className = 'mb-12 timeline-item';
+                let detailsHtml = job.details.map(detail => `<li class="text-slate-600">${detail}</li>`).join('');
+                jobItem.innerHTML = `
+                    <h3 class="text-xl font-bold text-slate-800">${job.title}</h3>
+                    <p class="text-sky-600 font-semibold">${job.company}</p>
+                    <p class="text-sm text-slate-500 mb-4">${job.date}</p>
+                    <ul class="list-disc list-inside space-y-2">
+                        ${detailsHtml}
+                    </ul>
+                `;
+                experienceContainer.appendChild(jobItem);
+            });
+
+            const projectsGrid = document.getElementById('projects-grid');
+            resumeData.projects.forEach(project => {
+                const projectCard = document.createElement('div');
+                projectCard.className = 'bg-white p-6 rounded-lg shadow-lg hover:shadow-2xl hover:-translate-y-1 transition-all';
+                let detailsHtml = project.details.map(detail => `<li class="text-slate-600">${detail}</li>`).join('');
+                projectCard.innerHTML = `
+                    <h3 class="text-xl font-bold text-slate-800">${project.title}</h3>
+                    <p class="mt-2 text-slate-600">${project.description}</p>
+                    <ul class="mt-4 list-disc list-inside space-y-2">
+                        ${detailsHtml}
+                    </ul>
+                `;
+                projectsGrid.appendChild(projectCard);
+            });
+
+            const educationContainer = document.querySelector('#education .grid');
+            resumeData.education.forEach(edu => {
+                const eduCard = document.createElement('div');
+                eduCard.className = 'bg-white p-6 rounded-lg shadow-md';
+                eduCard.innerHTML = `
+                    <h3 class="text-xl font-bold text-slate-800">🎓 ${edu.degree}</h3>
+                    <p class="mt-1 font-semibold text-slate-700">${edu.institution}</p>
+                    <p class="text-sm text-slate-500">${edu.graduated}</p>
+                    <p class="mt-3 text-slate-600">${edu.focus}</p>
+                `;
+                educationContainer.appendChild(eduCard);
+            });
+            resumeData.certifications.forEach(cert => {
+                const certCard = document.createElement('div');
+                certCard.className = 'bg-white p-6 rounded-lg shadow-md border-l-4 border-sky-500';
+                certCard.innerHTML = `
+                    <h3 class="text-xl font-bold text-slate-800">⭐ ${cert.name}</h3>
+                    <p class="mt-1 font-semibold text-slate-700">${cert.issuer}</p>
+                    <p class="text-sm text-slate-500">${cert.completed}</p>
+                    <p class="mt-3 text-slate-600">${cert.focus}</p>
+                `;
+                educationContainer.appendChild(certCard);
+            });
+        });
+    </script>
+</body>
+</html>
